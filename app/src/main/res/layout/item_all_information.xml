@@ -6,21 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_item_all_information"
-    android:padding="15dp">
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/iv_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tw_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/tw_text"
+        android:layout_marginStart="15dp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_image"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,22 +31,23 @@
 
     <TextView
         android:id="@+id/tw_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
         app:layout_constraintBottom_toTopOf="@+id/tw_date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_image"
+        app:layout_constraintEnd_toEndOf="@+id/tw_title"
+        app:layout_constraintStart_toStartOf="@+id/tw_title"
         app:layout_constraintTop_toBottomOf="@+id/tw_title"
         tools:text="@string/app_name" />
 
     <TextView
         android:id="@+id/tw_date"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_image"
-        app:layout_constraintTop_toBottomOf="@+id/tw_text"
+        app:layout_constraintEnd_toEndOf="@+id/tw_text"
+        app:layout_constraintStart_toStartOf="@+id/tw_text"
         tools:text="@string/app_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

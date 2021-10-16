@@ -1,4 +1,4 @@
-package com.project.testtaskl_tech.ui
+package com.project.testtaskl_tech.ui.login
 
 import android.os.Bundle
 import android.view.View
@@ -8,6 +8,7 @@ import com.project.testtaskl_tech.OpenNewFragment
 import com.project.testtaskl_tech.R
 import com.project.testtaskl_tech.databinding.FragmentLoginBinding
 import com.project.testtaskl_tech.remote.api.Network
+import com.project.testtaskl_tech.ui.deve_xam.DevExamFragment
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
@@ -20,10 +21,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         viewBinding = FragmentLoginBinding.bind(view)
 
         viewBinding.btSignIn.setOnClickListener {
-           // openFragment()
-            lifecycleScope.launch {
-                Network.createRetrofit.authorization()
-            }
+            openFragment()
+//            lifecycleScope.launch {
+//                Network.createRetrofit.authorization()
+//            }
         }
     }
 

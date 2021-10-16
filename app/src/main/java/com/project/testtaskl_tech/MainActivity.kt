@@ -3,7 +3,8 @@ package com.project.testtaskl_tech
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.project.testtaskl_tech.ui.LoginFragment
+import com.project.testtaskl_tech.ui.deve_xam.DevExamFragment
+import com.project.testtaskl_tech.ui.login.LoginFragment
 
 class MainActivity : AppCompatActivity(), OpenNewFragment {
 
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity(), OpenNewFragment {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        savedInstanceState ?: openFragment(LoginFragment(), false)
+        savedInstanceState ?: openFragment(DevExamFragment(), false)
     }
 
     override fun openFragment(fragment: Fragment, isAddBackStack: Boolean) {
