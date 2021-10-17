@@ -1,20 +1,18 @@
-package com.project.testtaskl_tech.ui.deve_xam
+package com.project.testtaskl_tech.ui.dev_exam
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.project.testtaskl_tech.remote.RemoteAllInformation
-import com.project.testtaskl_tech.ui.adapter.AllInformationAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import com.project.testtaskl_tech.OpenNewFragment
 import com.project.testtaskl_tech.R
 import com.project.testtaskl_tech.databinding.FragmentDevExamBinding
-import com.project.testtaskl_tech.remote.api.Network
+import com.project.testtaskl_tech.ui.DetailInformationDialog
+import com.project.testtaskl_tech.ui.adapter.AllInformationAdapter
 import com.project.testtaskl_tech.utility.ItemDecoration
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
@@ -27,14 +25,18 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding = FragmentDevExamBinding.bind(view)
-        adapterAllInformation = AllInformationAdapter()
-        initRecyclerView()
-        observeAllInformation()
-        observeRefreshInformation()
-
+        adapterAllInformation = AllInformationAdapter { info ->
+            (requireActivity() as? OpenNewFragment)?.openFragment(
+                DetailInformationDialog.newInstance(info), true
+            )
+        }
         viewBinding!!.btRefresh.setOnClickListener {
             viewModel.getRefreshInformation()
         }
+        initRecyclerView()
+        observeAllInformation()
+        observeRefreshInformation()
+        observeLifeCycle()
     }
 
     private fun observeAllInformation() {
@@ -53,6 +55,20 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
         with(viewBinding!!.recyclerView) {
             adapter = adapterAllInformation!!
             addItemDecoration(ItemDecoration())
+        }
+    }
+
+    private fun observeLifeCycle() {
+        viewLifecycleOwnerLiveData.observe(viewLifecycleOwner) { viewLifecycleOwner ->
+            viewLifecycleOwner?.lifecycle?.addObserver(object : LifecycleEventObserver {
+                override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                    when (event) {
+                        Lifecycle.Event.ON_START -> viewModel.getAllInformation()
+                        Lifecycle.Event.ON_PAUSE -> viewModel.jobCancel()
+                        else -> Timber.d("Lifecycle.Event - $event")
+                    }
+                }
+            })
         }
     }
 

@@ -1,4 +1,4 @@
-package com.project.testtaskl_tech.ui.deve_xam
+package com.project.testtaskl_tech.ui.dev_exam
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.testtaskl_tech.remote.RemoteAllInformation
 import com.project.testtaskl_tech.ui.Repository
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class DevExamViewModel : ViewModel() {
 
     private val repo = Repository()
+    private var jobAllInformation: Job? = null
 
     private val _allInformationLiveDate = MutableLiveData<List<RemoteAllInformation>>()
     val allInformationLiveDate: LiveData<List<RemoteAllInformation>>
@@ -23,13 +23,16 @@ class DevExamViewModel : ViewModel() {
     val refreshInformationLiveDate: LiveData<List<RemoteAllInformation>>
         get() = _refreshInformationLiveDate
 
-    init {
-        repo.getAllInformation()
-            .onEach {
-                Timber.d("getAllInformation")
-                _allInformationLiveDate.postValue(it)
+    fun jobCancel() {
+        jobAllInformation?.cancel()
+    }
+
+    fun getAllInformation() {
+        jobAllInformation = viewModelScope.launch {
+            repo.getAllInformation().collect { listInfo ->
+                _allInformationLiveDate.postValue(listInfo)
             }
-            .launchIn(viewModelScope)
+        }
     }
 
     fun getRefreshInformation() {

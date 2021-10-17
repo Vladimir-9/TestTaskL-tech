@@ -3,8 +3,7 @@ package com.project.testtaskl_tech
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.project.testtaskl_tech.ui.deve_xam.DevExamFragment
-import com.project.testtaskl_tech.ui.login.LoginFragment
+import com.project.testtaskl_tech.ui.dev_exam.DevExamFragment
 
 class MainActivity : AppCompatActivity(), OpenNewFragment {
 
