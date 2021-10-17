@@ -95,4 +95,6 @@ dependencies {
 
     //Logs
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation 'com.github.vacxe:phonemask:1.0.5'
 }

@@ -17,9 +17,12 @@ class Repository {
         }
     }
 
-    suspend fun getRefreshInformation(): List<RemoteAllInformation> {
-        return Network.createRetrofit.getAllInformation()
-    }
+    suspend fun getRefreshInformation() = Network.createRetrofit.getAllInformation()
+
+    suspend fun getMaskPhone() = Network.createRetrofit.getMaskPhone()
+
+    suspend fun signIn(phone: String, password: String) =
+        Network.createRetrofit.authorization(phone, password)
 
     companion object {
         const val TIMEOUT = 4000L

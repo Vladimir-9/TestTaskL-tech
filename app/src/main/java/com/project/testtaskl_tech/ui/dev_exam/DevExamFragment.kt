@@ -10,16 +10,17 @@ import androidx.lifecycle.LifecycleOwner
 import com.project.testtaskl_tech.OpenNewFragment
 import com.project.testtaskl_tech.R
 import com.project.testtaskl_tech.databinding.FragmentDevExamBinding
-import com.project.testtaskl_tech.ui.DetailInformationDialog
+import com.project.testtaskl_tech.ui.DetailInformationFragment
 import com.project.testtaskl_tech.ui.adapter.AllInformationAdapter
 import com.project.testtaskl_tech.utility.ItemDecoration
+import com.project.testtaskl_tech.utility.autoCleared
 import timber.log.Timber
 
 class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
 
-    private var viewBinding: FragmentDevExamBinding? = null
+    private var viewBinding: FragmentDevExamBinding by autoCleared()
     private val viewModel: DevExamViewModel by viewModels()
-    private var adapterAllInformation: AllInformationAdapter? = null
+    private var adapterAllInformation: AllInformationAdapter by autoCleared()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,10 +28,10 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
         viewBinding = FragmentDevExamBinding.bind(view)
         adapterAllInformation = AllInformationAdapter { info ->
             (requireActivity() as? OpenNewFragment)?.openFragment(
-                DetailInformationDialog.newInstance(info), true
+                DetailInformationFragment.newInstance(info), true
             )
         }
-        viewBinding!!.btRefresh.setOnClickListener {
+        viewBinding.btRefresh.setOnClickListener {
             viewModel.getRefreshInformation()
         }
         initRecyclerView()
@@ -41,19 +42,19 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
 
     private fun observeAllInformation() {
         viewModel.allInformationLiveDate.observe(viewLifecycleOwner) { listAllInformation ->
-            adapterAllInformation!!.items = listAllInformation
+            adapterAllInformation.items = listAllInformation
         }
     }
 
     private fun observeRefreshInformation() {
         viewModel.refreshInformationLiveDate.observe(viewLifecycleOwner) { listAllInformation ->
-            adapterAllInformation!!.items = listAllInformation
+            adapterAllInformation.items = listAllInformation
         }
     }
 
     private fun initRecyclerView() {
-        with(viewBinding!!.recyclerView) {
-            adapter = adapterAllInformation!!
+        with(viewBinding.recyclerView) {
+            adapter = adapterAllInformation
             addItemDecoration(ItemDecoration())
         }
     }
@@ -70,11 +71,5 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
                 }
             })
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewBinding = null
-        adapterAllInformation = null
     }
 }
