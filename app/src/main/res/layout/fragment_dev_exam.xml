@@ -66,7 +66,6 @@
         app:layout_constraintStart_toEndOf="@id/bt_sort_server"
         app:layout_constraintTop_toTopOf="@id/bt_sort_server" />
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="0dp"

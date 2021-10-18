@@ -16,9 +16,10 @@ import com.project.testtaskl_tech.ui.DetailInformationFragment
 import com.project.testtaskl_tech.ui.adapter.AllInformationAdapter
 import com.project.testtaskl_tech.utility.ItemDecoration
 import com.project.testtaskl_tech.utility.autoCleared
-import com.project.testtaskl_tech.utility.formattedDate
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
 
     private var viewBinding: FragmentDevExamBinding by autoCleared()
@@ -72,8 +73,10 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
         listInfo: List<RemoteAllInformation>,
         isSortDay: Boolean
     ): List<RemoteAllInformation> {
-        return if (isSortDay) listInfo.sortedBy { it.date.formattedDate() }
-        else listInfo.sortedBy { it.sort }
+        return if (isSortDay)
+            listInfo.sortedBy { it.date }
+        else
+            listInfo.sortedBy { it.sort }
     }
 
     private fun initRecyclerView() {
@@ -83,6 +86,9 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
         }
     }
 
+    // the selected item comes from the RecyclerView via a callback,
+    // then we open a fragment with details
+
     private fun initAdapter() {
         adapterAllInformation = AllInformationAdapter { info ->
             (requireActivity() as? OpenNewFragment)?.openFragment(
@@ -90,6 +96,11 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
             )
         }
     }
+
+    // 1 - request is made to the server
+    // 2 - the request to the server is canceled,
+    // when the phone is in the background or outside of this fragment.
+    // it is done thanks to the cancellation of Job at coroutine
 
     private fun observeLifeCycle() {
         viewLifecycleOwnerLiveData.observe(viewLifecycleOwner) { viewLifecycleOwner ->

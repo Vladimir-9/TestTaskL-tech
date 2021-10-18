@@ -1,14 +1,17 @@
 package com.project.testtaskl_tech.ui.login
 
-import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.project.testtaskl_tech.StateSuccess
-import com.project.testtaskl_tech.ui.Repository
+import com.project.testtaskl_tech.data.RepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(app: Application) : AndroidViewModel(app) {
-
-    private val repo = Repository(app)
+@HiltViewModel
+class LoginViewModel @Inject constructor (private val repository: RepositoryImpl) : ViewModel() {
 
     private val _maskPhoneLiveDate = MutableLiveData<LoginLoadState>()
     val maskPhoneLiveDate: LiveData<LoginLoadState>
@@ -26,7 +29,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _maskPhoneLiveDate.postValue(LoginLoadState.LoadState)
             runCatching {
-                _maskPhoneLiveDate.postValue(LoginLoadState.Success(repo.getMaskPhone()))
+                _maskPhoneLiveDate.postValue(LoginLoadState.Success(repository.getMaskPhone()))
             }.onFailure {
                 _maskPhoneLiveDate.postValue(LoginLoadState.Error(it.message))
             }
@@ -37,24 +40,24 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _maskPhoneLiveDate.postValue(LoginLoadState.LoadState)
             runCatching {
-                _signInLiveDate.postValue(LoginLoadState.Success(repo.signIn(phone, password)))
+                _signInLiveDate.postValue(LoginLoadState.Success(repository.signIn(phone, password)))
             }.onFailure {
                 _maskPhoneLiveDate.postValue(LoginLoadState.Error(it.message))
             }.onSuccess {
-                saveSuccessSignIn("$phone&$password", Repository.SP_KEY_PASSWORD_PHONE)
+                saveSuccessSignIn("$phone&$password", RepositoryImpl.SP_KEY_PASSWORD_PHONE)
             }
         }
     }
 
     private fun saveSuccessSignIn(value: String, key: String) {
         viewModelScope.launch {
-            repo.saveSuccessSignIn(value, key)
+            repository.saveSuccessSignIn(value, key)
         }
     }
 
     fun getSuccessSignIn(key: String) {
         viewModelScope.launch {
-            _successSignInLiveDate.postValue(repo.getSuccessSignIn(key))
+            _successSignInLiveDate.postValue(repository.getSuccessSignIn(key))
         }
     }
 }

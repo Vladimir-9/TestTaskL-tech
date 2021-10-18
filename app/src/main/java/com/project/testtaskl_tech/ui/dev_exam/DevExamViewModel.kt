@@ -1,19 +1,20 @@
 package com.project.testtaskl_tech.ui.dev_exam
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.testtaskl_tech.data.RepositoryImpl
 import com.project.testtaskl_tech.remote.RemoteAllInformation
-import com.project.testtaskl_tech.ui.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DevExamViewModel(app: Application) : AndroidViewModel(app) {
+@HiltViewModel
+class DevExamViewModel @Inject constructor(private val repository: RepositoryImpl) : ViewModel() {
 
-    private val repo = Repository(app)
     private var jobAllInformation: Job? = null
 
     private val _allInformationLiveDate = MutableLiveData<DevExamLoadState>()
@@ -28,7 +29,7 @@ class DevExamViewModel(app: Application) : AndroidViewModel(app) {
         jobAllInformation = viewModelScope.launch {
             _allInformationLiveDate.postValue(DevExamLoadState.LoadState)
             runCatching {
-                repo.getAllInformation().collect { listInfo ->
+                repository.getAllInformation().collect { listInfo ->
                     _allInformationLiveDate.postValue(DevExamLoadState.Success(listInfo))
                 }
             }.onFailure {
@@ -40,7 +41,7 @@ class DevExamViewModel(app: Application) : AndroidViewModel(app) {
     fun getRefreshInformation() {
         viewModelScope.launch {
             runCatching {
-                _allInformationLiveDate.postValue(DevExamLoadState.Success(repo.getRefreshInformation()))
+                _allInformationLiveDate.postValue(DevExamLoadState.Success(repository.getRefreshInformation()))
             }.onFailure {
                 _allInformationLiveDate.postValue(DevExamLoadState.Error(it.message))
             }
