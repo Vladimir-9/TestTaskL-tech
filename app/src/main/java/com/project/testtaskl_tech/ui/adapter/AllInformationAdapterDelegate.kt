@@ -9,6 +9,7 @@ import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import com.project.testtaskl_tech.R
 import com.project.testtaskl_tech.databinding.ItemAllInformationBinding
 import com.project.testtaskl_tech.remote.RemoteAllInformation
+import com.project.testtaskl_tech.utility.formattedDate
 
 class AllInformationAdapterDelegate(private val itemClick: (allInformation: RemoteAllInformation) -> Unit) :
     AbsListItemAdapterDelegate<RemoteAllInformation, RemoteAllInformation, AllInformationAdapterDelegate.ViewHolder>() {
@@ -43,14 +44,14 @@ class AllInformationAdapterDelegate(private val itemClick: (allInformation: Remo
             viewBinding = ItemAllInformationBinding.bind(itemView)
             Glide
                 .with(itemView)
-                .load("")
+                .load("http://dev-exam.l-tech.ru${allInformation.imageUrl}")
                 .placeholder(R.drawable.ic_more_time)
                 .error(R.drawable.ic_not_load)
                 .into(viewBinding.ivImage)
 
             viewBinding.twTitle.text = allInformation.title
             viewBinding.twText.text = allInformation.text
-            viewBinding.twDate.text = allInformation.date
+            viewBinding.twDate.text = allInformation.date.formattedDate()
             currentInformation(allInformation)
         }
 

@@ -6,11 +6,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.github.vacxe.phonemask.PhoneMaskManager
-import com.project.testtaskl_tech.StateSuccess
 import com.project.testtaskl_tech.OpenNewFragment
 import com.project.testtaskl_tech.R
+import com.project.testtaskl_tech.StateSuccess
 import com.project.testtaskl_tech.databinding.FragmentLoginBinding
 import com.project.testtaskl_tech.remote.RemoteMaskPhone
+import com.project.testtaskl_tech.ui.Repository
 import com.project.testtaskl_tech.ui.dev_exam.DevExamFragment
 import com.project.testtaskl_tech.utility.autoCleared
 import com.project.testtaskl_tech.utility.toast
@@ -24,9 +25,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding = FragmentLoginBinding.bind(view)
-        viewModel.getMaskPhone()
         observeSignIn()
         observeMaskPhone()
+        observeOnSuccessSignIn()
+        viewModel.getSuccessSignIn(Repository.SP_KEY_PASSWORD_PHONE)
+
         viewBinding.btSignIn.setOnClickListener {
             signIn()
         }
@@ -40,7 +43,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun createETWithMask(remoteMask: StateSuccess) {
-        val splitMask = Regex("\\s").split((remoteMask as RemoteMaskPhone).phoneMask, 2)
+        val remoteMaskPhone = (remoteMask as RemoteMaskPhone).phoneMask
+        val splitMask = Regex(REGEX_SPLIT_MASK).split(remoteMaskPhone, 2)
         val region = splitMask[0]
         val mask = splitMask[1]
         val maskSymbol = Regex(REGEX_MASK_SYMBOL).find(mask)?.groups?.get(0)?.value
@@ -60,6 +64,23 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         return formattedNumber.toString()
     }
 
+    private fun observeSignIn() {
+        viewModel.signInLiveDate.observe(viewLifecycleOwner) { loadState ->
+            when (loadState) {
+                is LoginLoadState.Success -> {
+                    openFragment()
+                }
+                is LoginLoadState.Error -> {
+                    toast("wrong data")
+                    visibleProgressBar(false)
+                }
+                is LoginLoadState.LoadState -> {
+                    visibleProgressBar(true)
+                }
+            }
+        }
+    }
+
     private fun observeMaskPhone() {
         viewModel.maskPhoneLiveDate.observe(viewLifecycleOwner) { loadState ->
             when (loadState) {
@@ -76,17 +97,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
     }
 
-    private fun observeSignIn() {
-        viewModel.signInLiveDate.observe(viewLifecycleOwner) { loadState ->
-            when (loadState) {
-                is LoginLoadState.Success -> openFragment()
-                is LoginLoadState.Error -> {
-                    toast("wrong data")
-                    visibleProgressBar(false)
-                }
-                is LoginLoadState.LoadState -> {
-                    visibleProgressBar(true)
-                }
+    private fun observeOnSuccessSignIn() {
+        viewModel.successSignInLiveDate.observe(viewLifecycleOwner) {
+            if (it != null) {
+                val dataLogin = it.split("&")
+                val phoneNumber = dataLogin[0]
+                val password = dataLogin[1]
+                viewBinding.etPhoneNumber.setText(phoneNumber)
+                viewBinding.etPassword.setText(password)
+            } else {
+                viewModel.getMaskPhone()
             }
         }
     }
@@ -105,5 +125,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     companion object {
         const val REGEX_MASK_SYMBOL = "[a-zA-Z]|[а-яА-Я]"
         const val REGEX_PHONE_FOR_SERVER = "\\d"
+        const val REGEX_SPLIT_MASK = "\\s"
     }
 }

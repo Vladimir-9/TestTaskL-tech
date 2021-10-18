@@ -28,7 +28,7 @@ class DetailInformationFragment : Fragment(R.layout.fragment_detail_information)
 
         Glide
             .with(view)
-            .load("")
+            .load("http://dev-exam.l-tech.ru${allInformation?.imageUrl}")
             .placeholder(R.drawable.ic_more_time)
             .error(R.drawable.ic_not_load)
             .into(viewBinding.ivImage)

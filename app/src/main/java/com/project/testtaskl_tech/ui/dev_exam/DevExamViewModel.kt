@@ -1,8 +1,9 @@
 package com.project.testtaskl_tech.ui.dev_exam
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.testtaskl_tech.remote.RemoteAllInformation
 import com.project.testtaskl_tech.ui.Repository
@@ -10,18 +11,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class DevExamViewModel : ViewModel() {
+class DevExamViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val repo = Repository()
+    private val repo = Repository(app)
     private var jobAllInformation: Job? = null
 
-    private val _allInformationLiveDate = MutableLiveData<List<RemoteAllInformation>>()
-    val allInformationLiveDate: LiveData<List<RemoteAllInformation>>
+    private val _allInformationLiveDate = MutableLiveData<DevExamLoadState>()
+    val allInformationLiveDate: LiveData<DevExamLoadState>
         get() = _allInformationLiveDate
-
-    private val _refreshInformationLiveDate = MutableLiveData<List<RemoteAllInformation>>()
-    val refreshInformationLiveDate: LiveData<List<RemoteAllInformation>>
-        get() = _refreshInformationLiveDate
 
     fun jobCancel() {
         jobAllInformation?.cancel()
@@ -29,15 +26,30 @@ class DevExamViewModel : ViewModel() {
 
     fun getAllInformation() {
         jobAllInformation = viewModelScope.launch {
-            repo.getAllInformation().collect { listInfo ->
-                _allInformationLiveDate.postValue(listInfo)
+            _allInformationLiveDate.postValue(DevExamLoadState.LoadState)
+            runCatching {
+                repo.getAllInformation().collect { listInfo ->
+                    _allInformationLiveDate.postValue(DevExamLoadState.Success(listInfo))
+                }
+            }.onFailure {
+                _allInformationLiveDate.postValue(DevExamLoadState.Error(it.message))
             }
         }
     }
 
     fun getRefreshInformation() {
         viewModelScope.launch {
-            _refreshInformationLiveDate.value = repo.getRefreshInformation()
+            runCatching {
+                _allInformationLiveDate.postValue(DevExamLoadState.Success(repo.getRefreshInformation()))
+            }.onFailure {
+                _allInformationLiveDate.postValue(DevExamLoadState.Error(it.message))
+            }
         }
     }
+}
+
+sealed class DevExamLoadState {
+    data class Success(val listInfo: List<RemoteAllInformation>) : DevExamLoadState()
+    data class Error(val errorMessage: String?) : DevExamLoadState()
+    object LoadState : DevExamLoadState()
 }
