@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import com.project.testtaskl_tech.R
+import com.project.testtaskl_tech.data.AllTheInformation
 import com.project.testtaskl_tech.databinding.ItemAllInformationBinding
-import com.project.testtaskl_tech.remote.RemoteAllInformation
 import com.project.testtaskl_tech.utility.formattedDate
 
-class AllInformationAdapterDelegate(private val itemClick: (allInformation: RemoteAllInformation) -> Unit) :
-    AbsListItemAdapterDelegate<RemoteAllInformation, RemoteAllInformation, AllInformationAdapterDelegate.ViewHolder>() {
+class AllInformationAdapterDelegate(private val itemClick: (allInformation: AllTheInformation) -> Unit) :
+    AbsListItemAdapterDelegate<AllTheInformation, AllTheInformation, AllInformationAdapterDelegate.ViewHolder>() {
 
     override fun isForViewType(
-        item: RemoteAllInformation,
-        items: MutableList<RemoteAllInformation>,
+        item: AllTheInformation,
+        items: MutableList<AllTheInformation>,
         position: Int
     ) = true
 
@@ -26,7 +26,7 @@ class AllInformationAdapterDelegate(private val itemClick: (allInformation: Remo
     }
 
     override fun onBindViewHolder(
-        item: RemoteAllInformation,
+        item: AllTheInformation,
         holder: ViewHolder,
         payloads: MutableList<Any>
     ) {
@@ -35,12 +35,12 @@ class AllInformationAdapterDelegate(private val itemClick: (allInformation: Remo
 
     class ViewHolder(
         viewItem: View,
-        private val itemClick: (allInformation: RemoteAllInformation) -> Unit
+        private val itemClick: (allInformation: AllTheInformation) -> Unit
     ) : RecyclerView.ViewHolder(viewItem) {
 
         private lateinit var viewBinding: ItemAllInformationBinding
 
-        fun bind(allInformation: RemoteAllInformation) {
+        fun bind(allInformation: AllTheInformation) {
             viewBinding = ItemAllInformationBinding.bind(itemView)
             Glide
                 .with(itemView)
@@ -49,13 +49,15 @@ class AllInformationAdapterDelegate(private val itemClick: (allInformation: Remo
                 .error(R.drawable.ic_not_load)
                 .into(viewBinding.ivImage)
 
-            viewBinding.twTitle.text = allInformation.title
-            viewBinding.twText.text = allInformation.text
-            viewBinding.twDate.text = allInformation.date.formattedDate()
+            with(viewBinding) {
+                twTitle.text = allInformation.title
+                twText.text = allInformation.text
+                twDate.text = allInformation.date.formattedDate()
+            }
             currentInformation(allInformation)
         }
 
-        private fun currentInformation(allInformation: RemoteAllInformation) {
+        private fun currentInformation(allInformation: AllTheInformation) {
             itemView.setOnClickListener {
                 itemClick(allInformation)
             }

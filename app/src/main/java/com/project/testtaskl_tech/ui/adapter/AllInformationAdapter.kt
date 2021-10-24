@@ -2,26 +2,26 @@ package com.project.testtaskl_tech.ui.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.project.testtaskl_tech.remote.RemoteAllInformation
+import com.project.testtaskl_tech.data.AllTheInformation
 
-class AllInformationAdapter(itemClick: (allInformation: RemoteAllInformation) -> Unit) :
-    AsyncListDifferDelegationAdapter<RemoteAllInformation>(AllInformationDiffUtil()) {
+class AllInformationAdapter(itemClick: (allInformation: AllTheInformation) -> Unit) :
+    AsyncListDifferDelegationAdapter<AllTheInformation>(AllInformationDiffUtil()) {
 
     init {
         delegatesManager.addDelegate(AllInformationAdapterDelegate(itemClick))
     }
 
-    class AllInformationDiffUtil : DiffUtil.ItemCallback<RemoteAllInformation>() {
+    class AllInformationDiffUtil : DiffUtil.ItemCallback<AllTheInformation>() {
         override fun areItemsTheSame(
-            oldItem: RemoteAllInformation,
-            newItem: RemoteAllInformation
+            oldItem: AllTheInformation,
+            newItem: AllTheInformation
         ): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: RemoteAllInformation,
-            newItem: RemoteAllInformation
+            oldItem: AllTheInformation,
+            newItem: AllTheInformation
         ): Boolean {
             return oldItem == newItem
         }

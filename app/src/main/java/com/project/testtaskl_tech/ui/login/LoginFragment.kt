@@ -58,11 +58,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val mask = splitMask[1]
         val maskSymbol = Regex(REGEX_MASK_SYMBOL).find(mask)?.groups?.get(0)?.value
 
-        PhoneMaskManager()
-            .withMaskSymbol(maskSymbol.toString())
-            .withMask(" $mask")
-            .withRegion(region)
-            .bindTo(viewBinding.etPhoneNumber)
+        runCatching {
+            PhoneMaskManager()
+                .withMaskSymbol(maskSymbol.toString())
+                .withMask(" $mask")
+                .withRegion(region)
+                .bindTo(viewBinding.etPhoneNumber)
+        }
     }
 
     // the phone number is converted to the format to be sent to the server

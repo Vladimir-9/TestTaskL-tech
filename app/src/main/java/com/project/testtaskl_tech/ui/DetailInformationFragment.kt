@@ -5,8 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.project.testtaskl_tech.R
+import com.project.testtaskl_tech.data.AllTheInformation
 import com.project.testtaskl_tech.databinding.FragmentDetailInformationBinding
-import com.project.testtaskl_tech.remote.RemoteAllInformation
 import com.project.testtaskl_tech.utility.withArguments
 
 class DetailInformationFragment : Fragment(R.layout.fragment_detail_information) {
@@ -16,16 +16,17 @@ class DetailInformationFragment : Fragment(R.layout.fragment_detail_information)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val allInformation = arguments?.getParcelable<RemoteAllInformation>(KEY_GET_INFO)
+        val allInformation = arguments?.getParcelable<AllTheInformation>(KEY_GET_INFO)
         viewBinding = FragmentDetailInformationBinding.bind(view)
-        viewBinding.twTitleOne.text = allInformation?.title
-        viewBinding.twTitleTwo.text = allInformation?.title
-        viewBinding.twText.text = allInformation?.text
+        with(viewBinding) {
+            twTitleOne.text = allInformation?.title
+            twTitleTwo.text = allInformation?.title
+            twText.text = allInformation?.text
 
-        viewBinding.btBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            btBack.setOnClickListener {
+                parentFragmentManager.popBackStack()
+            }
         }
-
         Glide
             .with(view)
             .load("http://dev-exam.l-tech.ru${allInformation?.imageUrl}")
@@ -38,7 +39,7 @@ class DetailInformationFragment : Fragment(R.layout.fragment_detail_information)
 
         private const val KEY_GET_INFO = "getInfo"
 
-        fun newInstance(info: RemoteAllInformation): DetailInformationFragment {
+        fun newInstance(info: AllTheInformation): DetailInformationFragment {
             return DetailInformationFragment().withArguments {
                 putParcelable(KEY_GET_INFO, info)
             }

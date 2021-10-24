@@ -1,7 +1,7 @@
 package com.project.testtaskl_tech.data
 
 import android.content.SharedPreferences
-import com.project.testtaskl_tech.remote.RemoteAllInformation
+import com.project.testtaskl_tech.mappers.AllTheInfoMappers
 import com.project.testtaskl_tech.remote.api.NetworkingApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -15,16 +15,24 @@ class RepositoryImpl @Inject constructor(
     private val networkingApi: NetworkingApi
 ) : Repository {
 
-    override fun getAllInformation(): Flow<List<RemoteAllInformation>> {
+    override fun getAllInformation(): Flow<List<AllTheInformation>> {
         return flow {
             while (true) {
-                emit(networkingApi.getAllInformation())
+                emit(
+                    networkingApi.getAllInformation().map {
+                        AllTheInfoMappers().toAllTheInformation(it)
+                    }
+                )
                 delay(TIMEOUT)
             }
         }
     }
 
-    override suspend fun getRefreshInformation() = networkingApi.getAllInformation()
+    override suspend fun getRefreshInformation(): List<AllTheInformation> {
+        return networkingApi.getAllInformation().map {
+            AllTheInfoMappers().toAllTheInformation(it)
+        }
+    }
 
     override suspend fun getMaskPhone() = networkingApi.getMaskPhone()
 

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.testtaskl_tech.data.AllTheInformation
 import com.project.testtaskl_tech.data.RepositoryImpl
-import com.project.testtaskl_tech.remote.RemoteAllInformation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -50,7 +50,7 @@ class DevExamViewModel @Inject constructor(private val repository: RepositoryImp
 }
 
 sealed class DevExamLoadState {
-    data class Success(val listInfo: List<RemoteAllInformation>) : DevExamLoadState()
+    data class Success(val listInfo: List<AllTheInformation>) : DevExamLoadState()
     data class Error(val errorMessage: String?) : DevExamLoadState()
     object LoadState : DevExamLoadState()
 }

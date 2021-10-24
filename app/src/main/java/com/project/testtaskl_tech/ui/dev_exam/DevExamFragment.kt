@@ -10,8 +10,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.project.testtaskl_tech.OpenNewFragment
 import com.project.testtaskl_tech.R
+import com.project.testtaskl_tech.data.AllTheInformation
 import com.project.testtaskl_tech.databinding.FragmentDevExamBinding
-import com.project.testtaskl_tech.remote.RemoteAllInformation
 import com.project.testtaskl_tech.ui.DetailInformationFragment
 import com.project.testtaskl_tech.ui.adapter.AllInformationAdapter
 import com.project.testtaskl_tech.utility.ItemDecoration
@@ -63,16 +63,18 @@ class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
     }
 
     private fun visibleProgressBar(isVisible: Boolean) {
-        viewBinding.progressBar.isVisible = isVisible
-        viewBinding.recyclerView.isVisible = isVisible.not()
-        viewBinding.btSortServer.isVisible = isVisible.not()
-        viewBinding.btSortDate.isVisible = isVisible.not()
+        with(viewBinding) {
+            progressBar.isVisible = isVisible
+            recyclerView.isVisible = isVisible.not()
+            btSortServer.isVisible = isVisible.not()
+            btSortDate.isVisible = isVisible.not()
+        }
     }
 
     private fun sort(
-        listInfo: List<RemoteAllInformation>,
+        listInfo: List<AllTheInformation>,
         isSortDay: Boolean
-    ): List<RemoteAllInformation> {
+    ): List<AllTheInformation> {
         return if (isSortDay)
             listInfo.sortedBy { it.date }
         else
