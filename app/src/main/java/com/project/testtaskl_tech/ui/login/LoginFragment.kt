@@ -4,24 +4,22 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.github.vacxe.phonemask.PhoneMaskManager
 import com.project.testtaskl_tech.OpenNewFragment
 import com.project.testtaskl_tech.R
 import com.project.testtaskl_tech.StateSuccess
+import com.project.testtaskl_tech.data.RepositoryImpl
 import com.project.testtaskl_tech.databinding.FragmentLoginBinding
 import com.project.testtaskl_tech.remote.RemoteMaskPhone
-import com.project.testtaskl_tech.data.RepositoryImpl
 import com.project.testtaskl_tech.ui.dev_exam.DevExamFragment
 import com.project.testtaskl_tech.utility.autoCleared
 import com.project.testtaskl_tech.utility.toast
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private var viewBinding: FragmentLoginBinding by autoCleared()
-    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

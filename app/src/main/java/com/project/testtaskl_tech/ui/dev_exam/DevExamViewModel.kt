@@ -6,14 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.testtaskl_tech.data.AllTheInformation
 import com.project.testtaskl_tech.data.RepositoryImpl
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class DevExamViewModel @Inject constructor(private val repository: RepositoryImpl) : ViewModel() {
+class DevExamViewModel(private val repository: RepositoryImpl) : ViewModel() {
 
     private var jobAllInformation: Job? = null
 

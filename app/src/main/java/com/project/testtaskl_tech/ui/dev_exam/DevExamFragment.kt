@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -16,14 +15,13 @@ import com.project.testtaskl_tech.ui.DetailInformationFragment
 import com.project.testtaskl_tech.ui.adapter.AllInformationAdapter
 import com.project.testtaskl_tech.utility.ItemDecoration
 import com.project.testtaskl_tech.utility.autoCleared
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-@AndroidEntryPoint
 class DevExamFragment : Fragment(R.layout.fragment_dev_exam) {
 
     private var viewBinding: FragmentDevExamBinding by autoCleared()
-    private val viewModel: DevExamViewModel by viewModels()
+    private val viewModel: DevExamViewModel by viewModel()
     private var adapterAllInformation: AllInformationAdapter by autoCleared()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

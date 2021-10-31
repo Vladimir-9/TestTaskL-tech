@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.project.testtaskl_tech.ui.login.LoginFragment
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OpenNewFragment {
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -6,12 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.testtaskl_tech.StateSuccess
 import com.project.testtaskl_tech.data.RepositoryImpl
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class LoginViewModel @Inject constructor (private val repository: RepositoryImpl) : ViewModel() {
+class LoginViewModel(private val repository: RepositoryImpl) : ViewModel() {
 
     private val _maskPhoneLiveDate = MutableLiveData<LoginLoadState>()
     val maskPhoneLiveDate: LiveData<LoginLoadState>

@@ -8,9 +8,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class RepositoryImpl @Inject constructor(
+class RepositoryImpl(
     private val sharePrev: SharedPreferences,
     private val networkingApi: NetworkingApi
 ) : Repository {
